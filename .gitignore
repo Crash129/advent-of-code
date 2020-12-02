@@ -1,3 +1,6 @@
 /.vscode
-/build
 input
+/build
+*.exe
+*.hi
+*.o
