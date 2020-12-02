@@ -1,5 +1,6 @@
 import Text.ParserCombinators.ReadP
 import Data.Char
+import qualified Data.Map as M
 
 data Policy = 
     Policy Int Int Char String
@@ -13,9 +14,11 @@ isBetween :: Int -> Int -> Int -> Bool
 isBetween x y z = 
     x <= y && y <= z
 
-isCharAtPos :: String -> Int -> Char -> Bool
-isCharAtPos str i c = 
-    length str > i && (str !! i) == c
+isCharAtPos :: M.Map Int Char -> Int -> Char -> Bool
+isCharAtPos m i c = 
+    case M.lookup i m of
+        Just x -> x == c
+        Nothing -> False
 
 step1 :: Policy -> Bool
 step1 (Policy x y c str) = 
@@ -23,7 +26,8 @@ step1 (Policy x y c str) =
 
 step2 :: Policy -> Bool
 step2 (Policy x y c str) = 
-    isCharAtPos str x c /= isCharAtPos str y c
+    let m = M.fromAscList $ zip [0..length str - 1] str
+    in isCharAtPos m x c /= isCharAtPos m y c
 
 countValid :: [Policy] -> (Policy -> Bool) -> Int
 countValid ps f = 
