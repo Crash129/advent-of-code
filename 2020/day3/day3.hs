@@ -16,10 +16,8 @@ solve :: Map -> Angle -> Int
 solve m a =
    let 
        x = zip [1..] $ tail $ takeEvery (down a) (trees m)
-       f acc (i,t) = if S.member (right a * i `mod` width m) t
-           then acc + 1 
-           else acc
-    in foldl f 0 x
+       isTreeHit (i,t) = S.member (right a * i `mod` width m) t
+    in length $ filter isTreeHit x
 
 step1 :: Map -> Int
 step1 s = solve s (Angle 3 1)
