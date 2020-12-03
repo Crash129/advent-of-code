@@ -26,7 +26,7 @@ step1 (Policy x y c str) =
 
 step2 :: Policy -> Bool
 step2 (Policy x y c str) = 
-    let m = M.fromAscList $ zip [0..length str - 1] str
+    let m = M.fromAscList $ zip [0..] str
     in isCharAtPos m x c /= isCharAtPos m y c
 
 countValid :: [Policy] -> (Policy -> Bool) -> Int
