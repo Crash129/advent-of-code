@@ -1,53 +1,41 @@
 import Text.ParserCombinators.ReadP
-import Data.List (maximumBy, sort)
-import Data.Function (on)
+import qualified Data.Set as S
 
-type Seat = (String, String)
-type Bounds = (Int, Int)
+sumFirstN :: Int -> Int
+sumFirstN n = (n * (n+1)) `div` 2
 
-getSeatID :: Seat -> Int
-getSeatID (row, col) = 
-    let r = binaryPartition 'B' row
-        c = binaryPartition 'R' col
-    in r * 8 + c
+sumInterval :: Int -> Int -> Int
+sumInterval start end = sumFirstN end - sumFirstN (start - 1)
 
-lowerHalf :: Bounds -> Bounds
-lowerHalf (l,u) = (l, u  - floor ((fromIntegral u - fromIntegral l) / 2)) 
+binaryToInt :: [Bool] -> Int
+binaryToInt = foldl (\acc x -> acc * 2 + fromEnum x) 0
 
-upperHalf :: Bounds -> Bounds
-upperHalf (l,u) = (l + ceiling ((fromIntegral u - fromIntegral l) / 2), u) 
+seatParser :: ReadP Int
+seatParser = do 
+    b <- many1 $ 
+        (False <$ (char 'F' +++ char 'L')) +++ 
+        (True  <$ (char 'B' +++ char 'R'))
+    return $ binaryToInt b
 
-binaryPartition :: Char -> String -> Int
-binaryPartition uc s = 
-    let m = 2 ^ length s - 1
-        f b c = if c == uc -- upper half character
-            then upperHalf b
-            else lowerHalf b
-    in fst $ foldl f (0, m) s
-
-seatParser :: ReadP Seat
-seatParser = do
-    r <- count 7 $ char 'F' +++ char 'B'
-    c <- count 3 $ char 'L' +++ char 'R'
-    return (r, c)
-
-seatsParser :: ReadP [Seat]
+seatsParser :: ReadP (S.Set Int)
 seatsParser = do 
-    sepBy seatParser (char '\n')
+    s <- sepBy seatParser (char '\n')
+    return $ S.fromList s
 
 parse :: ReadP a -> String -> a
 parse r s = fst $ last $ readP_to_S r s
 
-step1 :: [Seat] -> Int
-step1 s = getSeatID $ maximumBy (flip compare `on` fst) s
+step1 :: S.Set Int -> Int
+step1 = S.findMax
 
-step2 :: [Seat] -> Int
+step2 :: S.Set Int -> Int
 step2 s =
-    let s' = sort $ map getSeatID s
-        f acc x = if x == (acc + 1) then x else acc
-    in 1 + foldl1 f s'
+    let f (min',max',sum') x = (min min' x, max max' x, sum' + x)
+        (min', max', sum') = S.foldl f (maxBound::Int, minBound::Int, 0) s
+    in sumInterval min' max' - sum'
 
 main = do
     i <- readFile "input"
-    putStrLn $ "Step1: " ++ show (step1 $ parse seatsParser i)
-    putStrLn $ "Step2: " ++ show (step2 $ parse seatsParser i)
+    let seats = parse seatsParser i
+    putStrLn $ "Step1: " ++ show (step1 seats)
+    putStrLn $ "Step2: " ++ show (step2 seats)
