@@ -2,6 +2,8 @@ import Text.ParserCombinators.ReadP
 import Data.Char(isAlpha)
 import qualified Data.Set as S
 
+-- TODO solve by bit shifting
+
 type Person = S.Set Char
 type Group = [Person]
 
