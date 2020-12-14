@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import qualified Data.Set as S
 
@@ -22,9 +23,6 @@ seatsParser = do
     s <- sepBy seatParser (char '\n')
     return $ S.fromList s
 
-parse :: ReadP a -> String -> a
-parse r s = fst $ last $ readP_to_S r s
-
 step1 :: S.Set Int -> Int
 step1 = S.findMax
 
@@ -35,7 +33,7 @@ step2 s =
     in sumInterval min' max' - sum'
 
 main = do
-    i <- readFile "input"
+    i <- readInput 5
     let seats = parse seatsParser i
     putStrLn $ "Step1: " ++ show (step1 seats)
     putStrLn $ "Step2: " ++ show (step2 seats)

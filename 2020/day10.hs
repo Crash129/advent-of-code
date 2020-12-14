@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import Data.Char ( isDigit )
 import Data.List ( sort )
@@ -12,9 +13,6 @@ adapters = do
     js <- sepBy adapter (char '\n')
     return $ sort js
 
-parse :: ReadP a -> String -> a
-parse r s = fst $ last $ readP_to_S r s
-
 step1 :: [Int] -> Int
 step1 as = let
     maxAdapter = maximum as
@@ -24,7 +22,7 @@ step1 as = let
     in countSatisfy (== 1) diffs * countSatisfy (== 3) diffs
 
 main = do
-    i <- readFile "input"
+    i <- readInput 10
     let p = parse adapters i
     print $ step1 p
     -- print $ step2 p

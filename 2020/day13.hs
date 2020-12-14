@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import Data.Char ( isDigit )
 
@@ -10,9 +11,6 @@ buses = do
     char '\n'
     ids <- sepBy1 bus (char ',')
     return (start, ids)
-
-parse :: ReadP a -> String -> a
-parse r s = fst $ last $ readP_to_S r s
 
 gcdExt :: Int -> Int -> (Int, Int)
 gcdExt _ 0 = (1, 0)
@@ -43,7 +41,7 @@ step2 (_, ids) =
     in crt (map (\(x,y) -> (x, y * (-1))) offsets)
 
 main = do
-    i <- readFile "input"
+    i <- readInput 13
     let p = parse buses i
     print $ step1 p
     print $ step2 p

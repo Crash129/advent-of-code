@@ -1,5 +1,6 @@
+import Common ( readInput )
 import Text.ParserCombinators.ReadP
-import Data.Char
+import Data.Char ( isAlphaNum, isDigit )
 import qualified Data.Map as M
 
 data Policy = 
@@ -54,6 +55,6 @@ readPolicies str =
     map parsePolicy $ lines str
 
 main = do
-    i <- readFile "input"
+    i <- readInput 2
     putStrLn $ "Step1: " ++ show (countValid (readPolicies i) step1)
     putStrLn $ "Step2: " ++ show (countValid (readPolicies i) step2)

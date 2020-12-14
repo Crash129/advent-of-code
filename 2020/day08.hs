@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import Data.Char ( isDigit )
 import qualified Data.Map as M
@@ -22,9 +23,6 @@ instructions :: ReadP Program
 instructions = do
     is <- sepBy instruction $ char '\n'
     return $ M.fromList $ zip [0..] is
-
-parse :: ReadP a -> String -> a
-parse r s = fst $ last $ readP_to_S r s
 
 step :: Program -> State -> State
 step p (acc, pc) = 
@@ -63,7 +61,7 @@ step2 p =
     in f ks
 
 main = do
-    i <- readFile "input"
+    i <- readInput 8
     let p = parse instructions i
     print $ step1 p
     print $ step2 p

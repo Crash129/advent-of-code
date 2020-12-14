@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import qualified Data.Map as M
 import Data.Char ( isAlphaNum, isDigit, isLower, isHexDigit )
@@ -85,7 +86,7 @@ step2 :: [Passport] -> Int
 step2 p = length $ filter (==True) $ map (\p -> hasAllRequiredKeys p && allFieldsValid p) p
 
 main = do
-    i <- readFile "input"
-    let p = fst $ last $ readP_to_S parsePassports i
+    i <- readInput 4
+    let p = parse parsePassports i
     putStrLn $ "Step 1: " ++ show (step1 p)
     putStrLn $ "Step 2: " ++ show (step2 p)

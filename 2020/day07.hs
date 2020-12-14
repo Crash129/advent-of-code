@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import Data.Char(isAlpha, isDigit)
 import qualified Data.Map as M
@@ -41,9 +42,6 @@ rules = do
     r <- sepBy1 rule (char '\n')
     return $ M.fromList r
 
-parse :: ReadP a -> String -> a
-parse r s = fst $ last $ readP_to_S r s
-
 countGold :: M.Map String [Content] -> String -> Int
 countGold _ "shiny gold" = 0
 countGold m b = let
@@ -74,7 +72,7 @@ step2:: M.Map String [Content] -> Int
 step2 m = countBags m "shiny gold" - 1
 
 main = do
-    i <- readFile "input"
+    i <- readInput 7
     let r = parse rules i
     print $ step1 r
     print $ step2 r

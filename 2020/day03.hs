@@ -1,3 +1,4 @@
+import Common ( readInput )
 import qualified Data.Set as S
 import Data.List ( elemIndices )
 
@@ -28,8 +29,8 @@ step2 s = product $ map (solve s) [Angle 1 1, Angle 3 1, Angle 5 1, Angle 7 1, A
 findTreeIndices :: String -> S.Set Int
 findTreeIndices l = S.fromDistinctAscList $ elemIndices '#' l
 
-readInput :: String -> Map
-readInput i =
+readMap :: String -> Map
+readMap i =
     let 
         l = lines i
         w = length $ head l
@@ -37,7 +38,7 @@ readInput i =
     in Map w t
 
 main = do
-    i <- readFile "input"
-    let m = readInput i
+    i <- readInput 3
+    let m = readMap i
     putStrLn $ "Step1: " ++ show (step1 m)
     putStrLn $ "Step2: " ++ show (step2 m)

@@ -1,3 +1,4 @@
+import Common ( readInput, parse )
 import Text.ParserCombinators.ReadP
 import Data.Char ( isAlphaNum, isDigit )
 import Data.Bits
@@ -36,9 +37,6 @@ program = do
     as <- sepBy1 assignments (char '\n')
     return $ concat as
 
-parse :: ReadP a -> String -> a
-parse r s = fst $ last $ readP_to_S r s
-
 run :: Program -> M.Map Int Int
 run p =
     let f m [] = m
@@ -49,7 +47,7 @@ step1 :: Program -> Int
 step1 p = M.foldl (+) 0 $ run p
 
 main = do
-    i <- readFile "input"
+    i <- readInput 14
     let p = parse program i
     print $ step1 p
     -- print $ step2 p
