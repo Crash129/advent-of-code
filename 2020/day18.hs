@@ -11,23 +11,11 @@ plus = (+) <$ char '+'
 mult :: ReadP (Int -> Int -> Int)
 mult = (*) <$ char '*'
 
-operator :: ReadP (Int -> Int -> Int)
-operator = plus +++ mult
-
 parens :: ReadP a -> ReadP a
 parens = between (char '(') (char ')')
 
-func :: ReadP (Int -> Int)
-func = do  
-    op <- operator
-    b <- parens exprLeftToRight <++ literal
-    return $ op b
-
 exprLeftToRight :: ReadP Int
-exprLeftToRight = do
-    start <- parens exprLeftToRight <++ literal
-    fs <- many func
-    return $ foldl (flip (.)) id fs start
+exprLeftToRight = chainl (parens exprLeftToRight <++ literal) (plus +++ mult) 0
 
 plusTerm :: ReadP Int
 plusTerm = do
@@ -36,17 +24,11 @@ plusTerm = do
     b <- term
     return $ a + b
 
-mulFunc :: ReadP (Int -> Int)
-mulFunc = mult <*> term
-
 term :: ReadP Int
 term = plusTerm <++ parens exprAdvanced <++ literal
 
 exprAdvanced :: ReadP Int
-exprAdvanced = do
-    start <- term
-    fs <- many mulFunc
-    return $ foldl (flip (.)) id fs start
+exprAdvanced = chainl term mult 0
 
 step1 :: String -> Int
 step1 input = sum $ parse (sepBy1 exprLeftToRight (char '\n')) input
