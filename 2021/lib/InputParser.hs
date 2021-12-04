@@ -29,6 +29,8 @@ module InputParser
     isHexDigit,
     binary,
     oneOf,
+    string,
+    char,
   )
 where
 
@@ -43,7 +45,7 @@ import qualified Data.Text.IO as T
 import qualified Data.Vector as V
 import Data.Void (Void)
 import Text.Megaparsec (Parsec, anySingle, between, choice, endBy, eof, many, manyTill, notFollowedBy, oneOf, parse, satisfy, sepBy, sepEndBy, some, someTill, try, (<?>))
-import Text.Megaparsec.Char (hspace, hspace1, letterChar, newline, printChar, space, space1)
+import Text.Megaparsec.Char (char, hspace, hspace1, letterChar, newline, printChar, space, space1, string)
 import Text.Megaparsec.Char.Lexer (binary, decimal, signed)
 import qualified Text.Megaparsec.Char.Lexer as L
 import Text.Megaparsec.Error (errorBundlePretty)
