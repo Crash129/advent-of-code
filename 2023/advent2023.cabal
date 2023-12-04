@@ -48,3 +48,8 @@ executable day01
   import: shared-properties
   main-is:             days/day01.hs
   build-depends: base, advent2023
+
+executable day02
+  import: shared-properties
+  main-is:             days/day02.hs
+  build-depends: base, advent2023
