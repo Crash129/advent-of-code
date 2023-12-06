@@ -53,3 +53,9 @@ executable day02
   import: shared-properties
   main-is:             days/day02.hs
   build-depends: base, advent2023
+
+executable day04
+  import: shared-properties
+  main-is:             days/day04.hs
+  build-depends: base, advent2023, containers
+  
