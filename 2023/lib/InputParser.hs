@@ -52,6 +52,7 @@ import Text.Megaparsec.Error (errorBundlePretty)
 import Text.Megaparsec.Stream (TraversableStream, VisualStream)
 import Text.Printf (printf)
 import Util
+import Data.Maybe (fromMaybe, fromJust)
 
 type Parser = Parsec Void Text
 
@@ -107,11 +108,19 @@ parseTest2D i j = do
 lookup2D :: Positions -> Pos -> Char
 lookup2D poses (x, y) = (poses V.! y) V.! x
 
-map2D :: (Pos -> Char -> Char) -> Positions -> Positions
+find2D :: Char -> Positions -> Maybe Pos
+find2D s poses = 
+  case V.findIndex (V.elem s) poses of
+    Just line -> case V.findIndex (== s) (poses V.! line) of
+      Just col -> Just (line, col)
+      Nothing -> Nothing
+    Nothing -> Nothing
+
+map2D :: (Pos -> Char -> a) -> Positions -> V.Vector (V.Vector a)
 map2D fn = V.imap (\y -> V.imap (\x c -> fn (x, y) c))
 
-show2D :: Positions -> String
-show2D poses = unlines $ V.toList $ V.map V.toList poses
+show2D :: Show a => V.Vector (V.Vector a) -> String
+show2D poses = unlines $ V.toList $ V.map (show . V.toList) poses
 
 print2D :: Positions -> IO ()
 print2D poses = putStrLn $ show2D poses

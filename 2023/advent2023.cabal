@@ -79,3 +79,8 @@ executable day09
   import: shared-properties
   main-is:             days/day09.hs
   build-depends: base, advent2023
+
+executable day10
+  import: shared-properties
+  main-is:             days/day10.hs
+  build-depends: base, advent2023, vector
