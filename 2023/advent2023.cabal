@@ -69,3 +69,8 @@ executable day07
   import: shared-properties
   main-is:             days/day07.hs
   build-depends: base, advent2023
+
+executable day08
+  import: shared-properties
+  main-is:             days/day08.hs
+  build-depends: base, advent2023, mtl, QuickCheck
